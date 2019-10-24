@@ -119,26 +119,4 @@ void main()
     // hw4_test();
     reserve_table(8, "ABCDEFGH");
     print_restaurant_status();
-    reserve_table(6, "IJKLMN");
-    print_restaurant_status();
-    reserve_table(12, "OPQRSTUVWXYZ");
-    print_restaurant_status();
-    reserve_table(12, "OPQRSTUVWXYZ");
-    print_restaurant_status();
-    reserve_table(12, "OPQRSTUVWXYZ");
-    print_restaurant_status();
-    reserve_table(12, "OPQRSTUVWXYZ");
-    print_restaurant_status();
-    reserve_table(12, "OPQRSTUVWXYZ");
-    print_restaurant_status();
-    reserve_table(12, "OPQRSTUVWXYZ");
-    print_restaurant_status();
-    reserve_table(12, "OPQRSTUVWXYZ");
-    print_restaurant_status();
-    reserve_table(12, "OPQRSTUVWXYZ");
-    print_restaurant_status();
-    reserve_table(12, "OPQRSTUVWXYZ");
-    print_restaurant_status();
-    reserve_table(12, "OPQRSTUVWXYZ");
-    print_restaurant_status();
 }
