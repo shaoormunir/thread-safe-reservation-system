@@ -36,42 +36,54 @@ static unsigned test_failed;
 static bool caught_fault;
 static bool expecting_fault;
 
-struct thread_arg {
+struct thread_arg
+{
 	pthread_t pth;
 	char names[1];
 };
 
-#define CHECK_IS_NOT_NULL(ptrA) \
-	do { \
-		if ((ptrA) != NULL) { \
-			test_passed++; \
+#define CHECK_IS_NOT_NULL(ptrA)             \
+	do                                      \
+	{                                       \
+		if ((ptrA) != NULL)                 \
+		{                                   \
+			test_passed++;                  \
 			printf("%d: PASS\n", __LINE__); \
-		} else { \
-			test_failed++; \
+		}                                   \
+		else                                \
+		{                                   \
+			test_failed++;                  \
 			printf("%d: FAIL\n", __LINE__); \
-		} \
-		fflush(stdout); \
-	} while(0);
+		}                                   \
+		fflush(stdout);                     \
+	} while (0);
 
-#define CHECK_IS_EQUAL(valA,valB) \
-	do { \
-		if ((valA) == (valB)) { \
-			test_passed++; \
+#define CHECK_IS_EQUAL(valA, valB)          \
+	do                                      \
+	{                                       \
+		if ((valA) == (valB))               \
+		{                                   \
+			test_passed++;                  \
 			printf("%d: PASS\n", __LINE__); \
-		} else { \
-			test_failed++; \
+		}                                   \
+		else                                \
+		{                                   \
+			test_failed++;                  \
 			printf("%d: FAIL\n", __LINE__); \
-		} \
-		fflush(stdout); \
-	} while(0);
+		}                                   \
+		fflush(stdout);                     \
+	} while (0);
 
-static void report_test_results(void) {
+static void report_test_results(void)
+{
 	printf("%u tests passed, %u tests failed.\n", test_passed, test_failed);
 }
 
-static void fault_handler(int signum, siginfo_t *siginfo __attribute__((unused)), void *context __attribute__((unused))) {
+static void fault_handler(int signum, siginfo_t *siginfo __attribute__((unused)), void *context __attribute__((unused)))
+{
 	printf("Caught signal %d: %s!\n", signum, strsignal(signum));
-	if (!expecting_fault) {
+	if (!expecting_fault)
+	{
 		exit(EXIT_FAILURE);
 	}
 	caught_fault = true;
@@ -81,7 +93,8 @@ static void fault_handler(int signum, siginfo_t *siginfo __attribute__((unused))
 static sem_t sem_reserve;
 static sem_t sem_release;
 
-static void *test_threaded_reserve(void *data) {
+static void *test_threaded_reserve(void *data)
+{
 	struct thread_arg *arg = data;
 	void *h = reserve_table(1, arg->names);
 	CHECK_IS_NOT_NULL(h);
@@ -98,8 +111,10 @@ static void *test_threaded_reserve(void *data) {
  * Unit test of your table management software. This will
  * reserve and release tables.
  */
-void hw4_test(void) {
-	if (atexit(report_test_results) < 0) {
+void hw4_test(void)
+{
+	if (atexit(report_test_results) < 0)
+	{
 		perror("atexit");
 		exit(EXIT_FAILURE);
 	}
@@ -109,7 +124,8 @@ void hw4_test(void) {
 		.sa_flags = SA_SIGINFO,
 	};
 	sigemptyset(&sa.sa_mask);
-	if (sigaction(SIGSEGV, &sa, &sa) < 0) {
+	if (sigaction(SIGSEGV, &sa, &sa) < 0)
+	{
 		exit(EXIT_FAILURE);
 	}
 
@@ -158,17 +174,21 @@ void hw4_test(void) {
 	CHECK_IS_EQUAL(max_party, 14 * 6);
 
 	if ((sem_init(&sem_reserve, 0, 0) < 0) ||
-	    (sem_init(&sem_release, 0, 0) < 0)) {
+		(sem_init(&sem_release, 0, 0) < 0))
+	{
 		fprintf(stderr, "sem_init: %s\n", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 	struct thread_arg args[16];
-	for (unsigned i = 0; i < 16; i++) {
+	for (unsigned i = 0; i < 16; i++)
+	{
 		args[i].names[0] = 'M' + i;
 		pthread_create(&args[i].pth, NULL, test_threaded_reserve, args + i);
 	}
-	for (unsigned i = 0; i < 14; i++) {
-		if (sem_wait(&sem_reserve) < 0) {
+	for (unsigned i = 0; i < 14; i++)
+	{
+		if (sem_wait(&sem_reserve) < 0)
+		{
 			printf("errno = %d\n", errno);
 		}
 	}
@@ -178,7 +198,8 @@ void hw4_test(void) {
 	printf("^^^ above output should show 2 waiting parties ^^^\n");
 
 	sem_post(&sem_release);
-	for (unsigned i = 0; i < 16; i++) {
+	for (unsigned i = 0; i < 16; i++)
+	{
 		pthread_join(args[i].pth, NULL);
 	}
 	unsigned num_waiting = get_num_waiting();
