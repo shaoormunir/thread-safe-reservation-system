@@ -23,13 +23,13 @@ extern unsigned int get_num_waiting(void);
 #define TEST_PART_1
 
 /* uncomment the next line when starting Part 2 */
-// #define TEST_PART_2
+#define TEST_PART_2
 
 /* uncomment the next line when starting Part 3 */
-// #define TEST_PART_3
+#define TEST_PART_3
 
 /* uncomment the next line when starting Part 4 */
-// #define TEST_PART_4
+#define TEST_PART_4
 
 static unsigned test_passed;
 static unsigned test_failed;
@@ -193,6 +193,7 @@ void hw4_test(void)
 		}
 	}
 	max_party = get_max_party_size();
+	printf("Max party is: %ld\n", max_party);
 	CHECK_IS_EQUAL(max_party, 0);
 	print_restaurant_status();
 	printf("^^^ above output should show 2 waiting parties ^^^\n");

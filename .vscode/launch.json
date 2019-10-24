@@ -9,7 +9,13 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": [],
+            "args": [
+                "-pthread",
+                "-lm",
+                "‐‐std=c99",
+                "‐Wall",
+                "‐O2"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
