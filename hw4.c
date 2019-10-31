@@ -24,13 +24,14 @@
  * 
  */
 
+extern void hw4_test(void);
+
 #include <errno.h>
 #include <semaphore.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
-#include "hw4_test.c"
-
-extern void hw4_test(void);
+#include <math.h>
 
 char reservations[16][7];
 size_t rows = 16;
@@ -91,6 +92,7 @@ bool check_if_space_available(size_t starting_row, size_t party_size)
         current_party_size = current_party_size - (cols - 1);
 
     } while (current_party_size > 0);
+    return false;
 }
 
 void assign_table_to_party(size_t row, size_t party_size, const char *names)
@@ -149,7 +151,6 @@ int get_row_number(void *party)
 
     for (int i = 0; i < rows; i++)
     {
-        char *row_location = &reservations[i][0];
         if (party_mapping == &reservations[i][0])
             return i;
     }
@@ -211,7 +212,6 @@ void release_table(void *party)
     {
         int party_size = (int)reservations[row][0];
 
-        int total_rows = ceil(party_size / 6.0);
         if (party_size > 0)
         {
             decrease_bookings(ceil(party_size / 6.0));
@@ -232,13 +232,13 @@ void release_table(void *party)
         else
         {
             printf("Sending error singal.\n");
-            signal(SIGSEGV, fault_handler);
+            raise(SIGSEGV);
         }
     }
     else
     {
         printf("Sending error singal.\n");
-        signal(SIGSEGV, fault_handler);
+        raise(SIGSEGV);
     }
 }
 size_t get_max_party_size(void)
@@ -255,9 +255,11 @@ void initialize_wait_state()
     sem_init(&change_value, 0, 1);
 }
 
-void main()
+int main()
 {
     initialize_tables();
     initialize_wait_state();
     hw4_test();
+
+    return 0;
 }

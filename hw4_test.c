@@ -193,17 +193,28 @@ void hw4_test(void)
 		}
 	}
 	max_party = get_max_party_size();
-	printf("Max party is: %ld\n", max_party);
 	CHECK_IS_EQUAL(max_party, 0);
 	print_restaurant_status();
-	printf("^^^ above output should show 2 waiting parties ^^^\n");
+	printf("^^^ above output should show no more than 2 waiting parties ^^^\n");
+	unsigned num_waiting = get_num_waiting();
+	if (num_waiting <= 2)
+	{
+		test_passed++;
+		printf("%d: PASS\n", __LINE__);
+	}
+	else
+	{
+		test_failed++;
+		printf("%d: FAIL\n", __LINE__);
+	}
+	fflush(stdout);
 
 	sem_post(&sem_release);
 	for (unsigned i = 0; i < 16; i++)
 	{
 		pthread_join(args[i].pth, NULL);
 	}
-	unsigned num_waiting = get_num_waiting();
+	num_waiting = get_num_waiting();
 	CHECK_IS_EQUAL(num_waiting, 0);
 	print_restaurant_status();
 #endif
